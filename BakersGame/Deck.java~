@@ -1,0 +1,30 @@
+public class Deck
+{
+    public Deck(){
+    
+    }
+
+
+private class Card{
+    int value;
+    String suit;
+    public Card(int v, String s){
+        value = v;
+        suit = s;
+    }
+    public void setValue(int v){
+        value = v;
+    }
+    public void setSuit(String s){
+        suit = s;
+    }
+    public int getValue(){
+        return value;
+    }
+    public String getSuit(){
+        return suit;
+    }
+    
+    
+}
+}

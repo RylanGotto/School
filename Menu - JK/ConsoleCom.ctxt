@@ -1,0 +1,23 @@
+#BlueJ class context
+comment0.params=
+comment0.target=ConsoleCom()
+comment0.text=\r\n\ default\ constructor\r\n
+comment1.params=message
+comment1.target=void\ print(java.lang.String)
+comment1.text=\r\n\ helper\ method\ to\ contain\ printing\ of\ messages\ to\ the\ console\r\n\ @param\ message\ the\ message\ to\ print\r\n
+comment2.params=message
+comment2.target=void\ println(java.lang.String)
+comment2.text=\r\n\ helper\ method\ to\ contain\ printing\ of\ messages\ to\ the\ console\ with\ a\ new\ line\r\n\ @param\ message\ the\ message\ to\ print\r\n
+comment3.params=message
+comment3.target=java.lang.String\ getInput_String(java.lang.String)
+comment3.text=\r\n\ Displays\ a\ message\ and\ waits\ to\ read\ a\ line\ of\ text\ from\ the\ user\r\n\ @param\ message\ the\ message\ to\ display\r\n\ @return\ the\ line\ inputed\ by\ the\ user\r\n
+comment4.params=message
+comment4.target=int\ getInput_Int(java.lang.String)
+comment4.text=\r\n\ Displays\ a\ message\ and\ waits\ to\ read\ an\ integer\ from\ the\ user\r\n\ @param\ message\ the\ message\ to\ display\r\n\ @return\ the\ integer\ inputed\ by\ the\ user\r\n
+comment5.params=
+comment5.target=void\ clearInputLine()
+comment5.text=\r\n\ clears\ one\ line\ from\ the\ input\ console\r\n
+comment6.params=message
+comment6.target=char\ getInput_char(java.lang.String)
+comment6.text=\r\n\ reads\ one\ character\ from\ the\ input\r\n\ @param\ message\ the\ message\ to\ display\r\n\ @return\ the\ entered\ character\ or\ NO_CHAR_INPUT\ if\ no\ input\r\n
+numComments=7

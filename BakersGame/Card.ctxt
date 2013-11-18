@@ -1,0 +1,20 @@
+#BlueJ class context
+comment0.params=v\ s
+comment0.target=Card(int,\ java.lang.String)
+comment0.text=\r\n\ Card\ Constructor\r\n\r\n\ @param\ v\ A\ parameter\ \r\n\ @param\ s\ A\ parameter\r\n
+comment1.params=v
+comment1.target=void\ setValue(int)
+comment1.text=\r\n\ Method\ setValue\r\n\r\n\ @param\ v\ A\ parameter\r\n
+comment2.params=s
+comment2.target=void\ setSuit(java.lang.String)
+comment2.text=\r\n\ Method\ setSuit\r\n\r\n\ @param\ s\ A\ parameter\r\n
+comment3.params=
+comment3.target=int\ getValue()
+comment3.text=\r\n\ Method\ getValue\r\n\r\n\ @return\ The\ return\ value\r\n
+comment4.params=
+comment4.target=java.lang.String\ getSuit()
+comment4.text=\r\n\ Method\ getSuit\r\n\r\n\ @return\ The\ return\ value\r\n
+comment5.params=
+comment5.target=java.lang.String\ showCard()
+comment5.text=\r\n\ Method\ showCard\r\n\r\n\ @return\ The\ return\ value\r\n
+numComments=6

@@ -1,0 +1,14 @@
+#BlueJ class context
+comment0.params=
+comment0.target=MenuExample()
+comment0.text=\r\n\ Default\ Constructor\r\n
+comment1.params=
+comment1.target=void\ setUpMenu()
+comment1.text=\r\n\ Does\ the\ basic\ setup\ of\ the\ menu\ options\ used\ by\ the\ program\r\n
+comment2.params=
+comment2.target=void\ run()
+comment2.text=\r\n\ Runs\ the\ full\ example\ of\ the\ menu\r\n
+comment3.params=args
+comment3.target=void\ main(java.lang.String[])
+comment3.text=\r\n\ Main\ \r\n
+numComments=4

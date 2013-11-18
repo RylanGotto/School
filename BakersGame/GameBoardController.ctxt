@@ -1,0 +1,17 @@
+#BlueJ class context
+comment0.params=
+comment0.target=GameBoardController()
+comment0.text=\r\n\ GameBoardController\ Constructor\r\n\r\n
+comment1.params=
+comment1.target=void\ startGame()
+comment1.text=\r\n\ Method\ startGame\r\n\ Start\ the\ game,\ by\ calling\ required\ methods\ from\ the\ GameBoard\ class\r\n
+comment2.params=
+comment2.target=void\ gameMenu()
+comment2.text=\r\n\ Method\ gameMenu\r\n\ Handles\ all\ interaction\ with\ the\ user,\ and\ any\ direct\ modification\ the\ the\ game,\ holding,\ foundation\ cells\r\n
+comment3.params=
+comment3.target=void\ undo()
+comment3.text=\r\n\ Method\ undo\r\n\ undo\ tests\ the\ int\ from\ on\ top\ stack,\ calls\ the\ inversed\ method\ of\ \r\n\ what\ move\ was\ last\ made\ by\ the\ user\ from\ the\ corresponding\ number\r\n
+comment4.params=
+comment4.target=void\ GamePrompt()
+comment4.text=\r\n\ Method\ GamePrompt\r\n\ Prompts\ user\ with\ rules\ and\ legend\ to\ reference\ at\ any\ time\r\n
+numComments=5

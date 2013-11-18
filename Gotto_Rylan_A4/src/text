@@ -1,0 +1,138 @@
+/**
+		 * submenu handles all interfacing for remove option
+		 */
+		private void removeMenu() {
+			int userInput2;
+			scan = new Scanner(System.in);
+			if (!list.isEmpty()) {
+				System.out.println("enter item number: ");
+				try {
+					userInput = scan.nextInt();
+					userInput2 = userInput;
+					userInput2 -= 1; // place holder variable for next lines
+										// formatting
+					//System.out.println("Remove " + "\""
+						//	+ list.add(userInput2).getDescription() + "\"" // remove
+																					// menu
+							//+ " (y/n)?");
+					choice1 = scan.next().toUpperCase().charAt(0); // verification
+																	// user
+																	// input +
+																	// sanitization
+					if (choice1 == 'Y') {
+						list.remove(userInput);
+					}
+				} catch (InputMismatchException | IndexOutOfBoundsException e) {
+					JOptionPane.showMessageDialog(null,
+							"The right numbers are required!"); // incorrect input
+																// message
+				}
+			} else {
+				JOptionPane.showMessageDialog(null, "To do list is empty");
+			}
+
+		}
+
+		/**
+		 * submenu handles all interfacing for update option
+		 */
+		private void addMenu() {
+			scan = new Scanner(System.in);
+			System.out.println("describe new item: ");
+			userInput1 = scan.nextLine();
+			System.out.println("enter priority (h/m/l): ");
+			choice2 = scan.nextLine().toUpperCase().charAt(0); // verification user
+																// input +
+																// sanitization
+
+			switch (choice2) { // test to see what priority to assign new entry
+
+			case 'H':
+				list.add(new ToDoEntry(3, userInput1)); // add high priority entry
+				break;
+			case 'M':
+				list.add(new ToDoEntry(2, userInput1)); // add med priority entry
+				break;
+
+			case 'L':
+				list.add(new ToDoEntry(1, userInput1)); // add low priority entry
+
+				break;
+			default:
+				JOptionPane.showMessageDialog(null,
+						"The right letters are required!"); // incorrect input
+															// message
+				break;
+			}
+		}
+
+		/**
+		 * submenu handles all interfacing for update option
+		 */
+		private void updateMenu() {
+			scan = new Scanner(System.in);
+			if (!list.List.isEmpty()) {
+				System.out.println("enter item number: ");
+				try {
+
+					userInput = scan.nextInt();
+					userInput -= 1;
+
+					System.out.println("Reprioritize \""
+							+ list.List.get(userInput).getDescription() + "\"" // update
+																					// location
+																					// menu
+							+ " (y/n)?");
+
+					choice2 = scan.next().toUpperCase().charAt(0); // verification
+																	// user
+																	// input +
+																	// sanitization
+
+					if (choice2 == 'Y') {
+
+						System.out.println("enter priority (h/m/l): ");
+
+						choice2 = scan.next().toUpperCase().charAt(0); // verification
+																		// user
+																		// input +
+																		// sanitization
+
+						switch (choice2) {
+
+						case 'H':
+							list.List.get(userInput).setPriority(3); // reset
+																		// priority
+																		// high
+							break;
+						case 'M':
+							list.List.get(userInput).setPriority(2); // reset
+																		// priority
+																		// med
+							break;
+
+						case 'L':
+							list.List.get(userInput).setPriority(1); // reset
+																		// priority
+																		// low
+
+							break;
+						default:
+							JOptionPane.showMessageDialog(null,
+									"The right letters are required!"); // incorrect
+																		// input
+																		// message
+							break;
+						}
+					}
+				} catch (InputMismatchException | IndexOutOfBoundsException e) {
+					JOptionPane.showMessageDialog(null,
+							"The right numbers are required!"); // incorrect input
+																// message
+				}
+			} else {
+				JOptionPane.showMessageDialog(null, "To do list is empty");
+			}
+		}
+
+	}

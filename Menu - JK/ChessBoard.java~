@@ -1,0 +1,145 @@
+
+public class ChessBoard 
+{
+	private ChessPiece[][] board;
+	private King playerOneKing = null;
+	private King playerTwoKing = null;
+	
+
+	public ChessBoard()
+	{
+		board = new ChessPiece[8][8];
+		setUpSide(ChessPiece.PLAYER1,6,7);
+		setUpSide(ChessPiece.PLAYER2,1,0);
+	}
+
+	public boolean hasPlayerOnesKingBeenCaptured()
+	{
+		return playerOneKing.hasBeenCaptured();
+	}
+	
+	public boolean hasPlayerTwosKingBeenCaptured()
+	{
+		return playerTwoKing.hasBeenCaptured();
+	}
+	
+	private void setUpSide(boolean side, int frontRow, int backRow)
+	{
+		//set up pawns
+		//for(int col=0; col < board[frontRow].length; col++)
+		//	placePiece( new Pawn( new Location(frontRow, col) , side) );
+		
+		placePiece( new Rook( new Location(backRow, 0) , side) );
+		placePiece( new Rook( new Location(backRow, 7) , side) );
+		
+		placePiece( new Bishop( new Location(backRow, 1) , side) );
+		placePiece( new Bishop( new Location(backRow, 6) , side) );
+		
+		placePiece( new Knight( new Location(backRow, 2) , side) );
+		placePiece( new Knight( new Location(backRow, 5) , side) );
+		
+		King tmp = null;
+		
+		if(side == ChessPiece.PLAYER1 )
+		{
+			playerOneKing = new  King( new Location(backRow, 3) , side);
+			tmp = playerOneKing;
+		}
+		else
+		{
+			playerTwoKing = new  King( new Location(backRow, 3) , side);
+			tmp = playerTwoKing;
+		}
+		
+		placePiece( tmp );
+		placePiece( new Queen( new Location(backRow, 4) , side) );
+	}
+	
+	/**
+	 * Determines if a location is on the board of off the board
+	 * @param spot
+	 * @return false if off the board
+	 */
+	public boolean onBoard(Location spot)
+	{
+		return  onBoard(spot.getRow(), spot.getCol());
+	}
+
+	public boolean onBoard(int row, int col)
+	{
+		return ( row >= 0 && col >= 0)
+				 && ( row < board.length)
+				 && ( col < board[row].length);
+	}
+
+	public ChessPiece getPieceAt(Location spot)
+	{
+		ChessPiece piece = null;
+
+		if(onBoard(spot))
+			piece = board[spot.getRow()][spot.getCol()];
+
+		return piece;
+	}
+
+	public void placePiece(ChessPiece piece)
+	{
+		Location spot = piece.getCurrentLocation();
+		board[spot.getRow()][spot.getCol()] = piece;
+	}
+
+
+	public boolean isPieceAtLocationEnemy(Location spot, boolean side)
+	{
+		boolean result = false;
+		
+		if( onBoard(spot) )
+		{
+			ChessPiece piece = getPieceAt(spot);
+			if(piece != null && piece.getSide() != side )
+				result = true;
+		}
+		
+		return result;
+	}
+	
+	public ChessPiece removePieceAt(Location spot)
+	{
+		ChessPiece piece = null;
+
+		if(onBoard(spot))
+		{
+			piece = board[spot.getRow()][spot.getCol()];
+			board[spot.getRow()][spot.getCol()] = null;
+		}
+
+		return piece;
+	}
+
+	public void print()
+	{
+		String line = "";
+		
+		System.out.print("   ");
+		for(int col=0; col < board[0].length; col++)
+		{
+			System.out.print(""+(col+1)+"  ");
+			line+="---";
+		}
+		System.out.println();
+		System.out.println("  "+line);
+		for(int row=0; row < board.length; row++)
+		{
+			System.out.print(""+(row+1)+"|");
+			for(int col=0; col < board[row].length; col++)
+			{
+				if(board[row][col] == null)
+					System.out.print("  |");
+				else
+					System.out.print( board[row][col] + "|" );
+			}
+			System.out.println();
+			System.out.println("  "+line);
+		}
+	}
+}

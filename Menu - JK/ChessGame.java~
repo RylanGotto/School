@@ -1,0 +1,220 @@
+import java.util.ArrayList;
+
+
+public class ChessGame 
+{
+	private ChessBoard board;
+	private boolean endGame;
+	private ConsoleCom com;
+	private boolean currentPlayer;
+	private Menu validMovesMenu;
+
+	/**
+	 * 
+	 */
+	public ChessGame()
+	{
+		board = new ChessBoard();
+		com = new ConsoleCom();
+		endGame = false;
+		currentPlayer = ChessPiece.PLAYER1;
+		validMovesMenu = new Menu();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private Location getUserLocationChoice()
+	{
+		int row=0,col=0;
+		boolean exit = true;
+
+		do
+		{
+			row = com.getInput_Int("Enter Row (-1 to quit game ): ");
+
+			if(row != -1 )
+				col = com.getInput_Int("Enter Col (-1 to quit game ): ");
+
+			if(row == -1 || col == -1) // exit game choice selected
+				exit = true;
+			else if(!board.onBoard(row-1,col-1))
+				exit = false;
+			else
+				exit = true;
+		}
+		while(!exit);
+
+		return new Location(row-1, col-1);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private ChessPiece getUserPieceChoice()
+	{
+		Location selectedLoc=null;
+		ChessPiece selectedPiece=null;
+		boolean exit = true;
+
+		do
+		{
+			selectedLoc = getUserLocationChoice();
+
+			if(selectedLoc.getCol() == -1 || selectedLoc.getRow() == -1)
+			{
+				exit = true;
+				endGame = true;
+			}
+			else
+			{
+				selectedPiece = board.getPieceAt(selectedLoc);
+
+				if(selectedPiece == null) 
+				{
+					com.println("Error: No piece at that location");
+					exit = false;
+				}
+				else if(selectedPiece.getSide() != currentPlayer)
+				{
+					com.println("Error: That is not one of your pieces");
+					exit = false;
+				}
+			}
+		}
+		while(!exit);
+
+		return selectedPiece;
+	}
+
+	/**
+	 * 
+	 * @param validMoves
+	 * @return
+	 */
+	private Location displayLocationChoiceMenu(ArrayList<Location> validMoves)
+	{
+		validMovesMenu.clear();
+		int count = 1;
+		Location choice = null;
+
+		if(validMoves.size() > 0)
+		{
+			for(Location loc: validMoves)
+			{
+				validMovesMenu.addMenuOption( new LocationMenuOption(""+count, loc) );
+				count++;
+			}		
+
+
+			System.out.println("Select location to move piece to: ");
+			LocationMenuOption selected = (LocationMenuOption) validMovesMenu.getUserChoice();
+			choice = selected.getLocChoice();
+		}
+		else
+			com.println("No choices possible");
+		
+		return choice;
+	}
+	/**
+	 * 
+	 */
+	private void interactWithTheCurrentPlayer()
+	{
+		ChessPiece selectedPiece = getUserPieceChoice();
+
+		if(selectedPiece != null)
+		{
+			ArrayList<Location> validMoves = selectedPiece.generateValidMoveLocations(board);
+
+			Location moveLocation = displayLocationChoiceMenu(validMoves);
+
+			if(moveLocation != null)
+			{
+				//Do the actual move and possible capture
+				ChessPiece pieceAtNewLocation = board.removePieceAt(moveLocation);
+
+				//do capture / move it is not a piece from their side
+
+				if( pieceAtNewLocation != null ) // do capture
+				{
+					pieceAtNewLocation.markAsCaptured();
+				}
+
+				//move to the new location
+				board.removePieceAt(selectedPiece.getCurrentLocation());
+				selectedPiece.setCurrentLocation(moveLocation);
+				board.placePiece(selectedPiece);
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private boolean checkForWin()
+	{
+		boolean result = false;		
+
+		if(board.hasPlayerOnesKingBeenCaptured())
+		{
+			System.out.println("PLAYER TWO HAS WON !!!!!!!!");
+			result = true;
+			endGame = true;
+		}
+
+		if(board.hasPlayerTwosKingBeenCaptured())
+		{
+			System.out.println("PLAYER ONE HAS WON !!!!!!!!");
+			result = true;
+			endGame = true;
+		}
+
+		return result;
+	}
+
+	/**
+	 * 
+	 */
+	public void run()
+	{
+		do
+		{
+		    com.println("\f"); // clears to concole when running in bluej
+			if(currentPlayer == ChessPiece.PLAYER1)
+				System.out.println("Turn: PLAYER ONE");
+			else
+				System.out.println("Turn: PLAYER TWO");
+
+			board.print();
+			interactWithTheCurrentPlayer();
+
+			checkForWin(); // will change endGame if a win has occured
+
+			if(!endGame)
+			{
+				currentPlayer = !currentPlayer;// switch to the next player
+			}
+			else
+				com.println("Exiting the game");
+		}
+		while(!endGame);
+
+
+	}
+
+	/**
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args)
+	{
+		ChessGame game = new ChessGame();
+		game.run();
+	}
+
+
+}

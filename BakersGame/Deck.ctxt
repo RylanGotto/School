@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.params=
+comment0.target=Deck()
+comment0.text=\r\n\ Deck\ Constructor\r\n\ Populates\ arraylist\ know\ as\ deck\r\n
+comment1.params=x
+comment1.target=Card\ dealCards(int)
+comment1.text=\r\n\ Method\ dealCards\r\n\ returns\ a\ card\ object\ of\ given\ index\ x\r\n\ @param\ x\ A\ parameter\r\n\ @return\ The\ return\ value\r\n
+numComments=2

@@ -1,0 +1,18 @@
+#BlueJ class context
+comment0.params=comm
+comment0.target=Menu(ConsoleCom)
+comment0.text=\r\n\ Default\ Constructor\r\n
+comment1.params=
+comment1.target=Menu()
+comment2.params=option
+comment2.target=void\ addMenuOption(MenuOption)
+comment2.text=\r\n\ Adds\ a\ menu\ option\ that\ the\ user\ can\ select.\ This\ method\ does\ not\ \r\n\ check\ for\ duplicate\ choices/options\r\n\ \r\n\ @param\ option\ the\ option\ object\ to\ add\ to\ the\ possible\ choices\ \r\n
+comment3.params=
+comment3.target=MenuOption\ getUserChoice()
+comment3.text=\r\n\ Prints\ all\ the\ choices\ to\ the\ user\ and\ gets\ a\ valid\ choice\ from\ the\ user.\r\n\ @return\ the\ selected\ option\ (based\ upon\ the\ options\ that\ have\ been\ given\ to\ the\ user)\r\n
+comment4.params=choice
+comment4.target=MenuOption\ isValidChoice(java.lang.String)
+comment4.text=\r\n\ Determines\ if\ the\ given\ choice\ is\ valid\ based\ upon\ the\ current\ options\ in\ the\ menu\r\n\ @param\ choice\ the\ choice\ made\ by\ the\ user\r\n\ @return\ The\ selected\ menu\ option\ object\ if\ it\ is\ a\ valid\ choice,\ null\ otherwise\r\n
+comment5.params=
+comment5.target=void\ clear()
+numComments=6
