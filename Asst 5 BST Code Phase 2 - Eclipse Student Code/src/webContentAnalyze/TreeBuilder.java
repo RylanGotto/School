@@ -2,155 +2,135 @@ package webContentAnalyze;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
 
 import tree.BinarySearchTree;
 import tree.treeIterators.BinaryTreeIterator;
 import userIO.ConsoleCom;
 import comparisonObjects.StringNonCaseSensitiveCompare;
-import comparisonObjects.WordFreqCompare;
 
-import org.jsoup.nodes.*;
 import org.jsoup.select.*;
 
-public class TreeBuilder extends ConsoleCom{
-	
-	
-	
-	ArrayList<WordFreq> freqTextList;
-	ArrayList<WordFreq> freqTagList;
-	ArrayList<WordFreq> freqErrorList;
-	StringNonCaseSensitiveCompare stringComp;
-	BinarySearchTree<String, String> bStError;
-	BinarySearchTree<String, String> bStTree;
-	BinarySearchTree<String, String> bStTag;
-	
-	public TreeBuilder() throws FileNotFoundException {
-		
-		
-		freqTextList = new ArrayList<WordFreq>();
-		freqTagList = new ArrayList<WordFreq>();
-		freqErrorList = new ArrayList<WordFreq>();
+public class TreeBuilder extends ConsoleCom
+{
+
+	private StringNonCaseSensitiveCompare stringComp;
+	private BinarySearchTree<String, String> bStSplChk;
+	private BinarySearchTree<String, WordFreq> bStPageWord;
+	private BinarySearchTree<String, WordFreq> bStTag;
+	private BinarySearchTree<String, String> bStBadWord;
+
+	public TreeBuilder()
+	{
+
 		stringComp = new StringNonCaseSensitiveCompare();
-		bStError = new BinarySearchTree<String, String>(stringComp);
-		bStTree = new BinarySearchTree<String, String>(stringComp);	
-		bStTag = new BinarySearchTree<String, String>(stringComp);	
+		bStSplChk = new BinarySearchTree<String, String>(stringComp);
+		bStBadWord = new BinarySearchTree<String, String>(stringComp);
+		bStPageWord = new BinarySearchTree<String, WordFreq>(stringComp);
+		bStTag = new BinarySearchTree<String, WordFreq>(stringComp);
+
+	}
+
+	public void buildTrees(Elements listOfElements) throws FileNotFoundException
+	{
+		WordsExtractor extractor = new WordsExtractor();
+		String tag = "";
+		String apageWord = "";
 		
 		popSpellCheck();
 		
-		
-	}
-	public void buildTextTree(Document doc)
-	{
-	
-		WordsExtractor extractor = new WordsExtractor();
-		
-		String result = doc.text();
-		String curWord = "";
-		extractor.setLine(result);
-		while (extractor.hasMoreWords()) {
-
-			curWord = extractor.nextWord();
-			
-			buildTree(bStTree, freqTextList, curWord);
-			
-		}
-		Collections.sort(freqTextList, new  WordFreqCompare());
-	}
-	
-	public void buildTagTree(Elements elmm)
-	{
-			String curWord = "";
-		    Elements elm = elmm;
-	        for (int i = 1;i<elm.size();i++){
-	        curWord = elm.get(i).tagName();
-	        buildTree(bStTag, freqTagList, curWord);
-
-		}
-	        Collections.sort(freqTagList, new  WordFreqCompare());
-	}
-	
-	 public void buildErrorTree()
-	 {
-		 
-		BinaryTreeIterator<String, String> iter = bStTree.getTraversalIterator(bStTree.IN_TRAV);
-		while(iter.canMoveToNext())
+		for (int i = 0; i < listOfElements.size(); i++)
 		{
-			if(!bStError.containskey(iter.getCurrentData()))
+			tag = listOfElements.get(i).tagName();
+
+			if (bStTag.containskey(tag))
+			{
+				bStTag.find(tag).increaseFreq();
+			} else
+			{
+				bStTag.add(tag, new WordFreq(tag));
+			}
+			if (listOfElements.get(i).hasText())
+			{
+				extractor.setLine(listOfElements.get(i).ownText());
+
+				while (extractor.hasMoreWords())
+				{
+					apageWord = extractor.nextWord();
+					if (apageWord != null)
 					{
-						freqErrorList.add(new WordFreq(iter.getCurrentData()));
+						if (bStPageWord.containskey(apageWord))
+						{
+							bStPageWord.find(apageWord).increaseFreq();
+						} else if (bStSplChk.containskey(apageWord))
+						{
+							bStPageWord.add(apageWord, new WordFreq(apageWord));
+						} else
+						{
+							if (!bStBadWord.containskey(apageWord))
+								bStBadWord.add(apageWord, apageWord);
+
+							bStPageWord.add(apageWord, new WordFreq(apageWord));
+						}
 					}
-		
-					iter.moveToNext();
-			
+
+				}
+			}
 		}
-		Collections.sort(freqErrorList, new  WordFreqCompare());
-	 }
- 
-	 
-	public ArrayList<WordFreq> getFreqTextList() {
-		return freqTextList;
+		
+		
 	}
-
-
-	public void setFreqTextList(ArrayList<WordFreq> freqTextList) {
-		this.freqTextList = freqTextList;
-	}
-
-	public ArrayList<WordFreq> getFreqTagList() {
-		return freqTagList;
-	}
-
-	public void setFreqTagList(ArrayList<WordFreq> freqTagList) {
-		this.freqTagList = freqTagList;
-	}
-
-	public ArrayList<WordFreq> getFreqErrorList() {
-		return freqErrorList;
-	}
-
-	public void setFreqErrorList(ArrayList<WordFreq> freqErrorList) {
-		this.freqErrorList = freqErrorList;
-	}
-
-
-
-
 
 	private void popSpellCheck() throws FileNotFoundException
 	{
 		Scanner scan = new Scanner(new File("web/words.txt"));
 		String curWord = "";
-		while(scan.hasNextLine()){
+		while (scan.hasNextLine())
+		{
 			curWord = scan.nextLine();
-			bStError.add(curWord,curWord);
-			}
-			scan.close();
-	}
-	
-	
-	private void buildTree(BinarySearchTree<String, String> tree, ArrayList<WordFreq> list, String word)
-	{
-		if (tree.containskey(word)) {
-			for (int i = 0; i < list.size(); i++) {
-				if (stringComp.compare(word, list.get(i).getWord()) == 0) {
-					list.get(i).increaseFreq();
-				}
-			}
-		} else {
-			tree.add(word, word);
-			list.add(new WordFreq(word));
+			bStSplChk.add(curWord, curWord);
 		}
+		scan.close();
 	}
-	
-	}
-	
-	
-	
-	
-	
 
-	
-	
+	public BinarySearchTree<String, String> getbStSplChk()
+	{
+		return bStSplChk;
+	}
+
+	public void setbStSplChk(BinarySearchTree<String, String> bStSplChk)
+	{
+		this.bStSplChk = bStSplChk;
+	}
+
+	public BinarySearchTree<String, WordFreq> getbStPageWord()
+	{
+		return bStPageWord;
+	}
+
+	public void setbStPageWord(BinarySearchTree<String, WordFreq> bStPageWord)
+	{
+		this.bStPageWord = bStPageWord;
+	}
+
+	public BinarySearchTree<String, WordFreq> getbStTag()
+	{
+		return bStTag;
+	}
+
+	public void setbStTag(BinarySearchTree<String, WordFreq> bStTag)
+	{
+		this.bStTag = bStTag;
+	}
+
+	public BinarySearchTree<String, String> getbStBadWord()
+	{
+		return bStBadWord;
+	}
+
+	public void setbStBadWord(BinarySearchTree<String, String> bStBadWord)
+	{
+		this.bStBadWord = bStBadWord;
+	}
+
+}

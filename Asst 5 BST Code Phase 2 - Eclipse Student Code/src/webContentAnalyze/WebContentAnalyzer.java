@@ -25,6 +25,7 @@ import comparisonObjects.CompareObjects;
 import comparisonObjects.StringCaseSensitiveCompare;
 import comparisonObjects.StringNonCaseSensitiveCompare;
 import tree.BinarySearchTree;
+import tree.treeIterators.BinaryTreeIterator;
 import userIO.ConsoleCom;
 
 public class WebContentAnalyzer {
@@ -52,21 +53,10 @@ public class WebContentAnalyzer {
 	 */
 	public MSWordDocument generateReportForPageContent(String path)
 			throws Exception {
-		
-		 // this is the JSoup document object you will get
-								// tags and words from
-		
-
-		// Gather data from the given web page content
-		// You should break this down into a better design, do not just include
-		// all code
-		// in this single method.
-		big poop pants
-		
 		TreeBuilder builder = new TreeBuilder();
-		builder.buildTextTree(getDOM(path));
-		builder.buildTagTree(getDOM(path).getAllElements());
-		builder.buildErrorTree();
+		// Gather data from the given web page content
+		builder.buildTrees(getDOM(path).body().getAllElements());
+		
 		// Generate Document based upon the given data
 
 		// Note: The library that is used to generate the MS word document has a
@@ -83,47 +73,58 @@ public class WebContentAnalyzer {
 	private MSWordDocument format(MSWordDocument document, String path, TreeBuilder build)
 	{
 		
+		BinaryTreeIterator<String, WordFreq> iter = build.getbStPageWord().getTraversalIterator(BinarySearchTree.IN_TRAV);
+		BinaryTreeIterator<String, String> iter2 = build.getbStBadWord().getTraversalIterator(BinarySearchTree.IN_TRAV);
+		
 		document.writeTitle("Report for: " + path);
-
+		document.writeHeading1("Word Frequency");
+		while(iter.canMoveToNext())
+		{
+			
+			document.writeText( String.format("(%10s) %s", iter.getCurrentData().getFrequency(), iter.getCurrentData().getWord()));
+			iter.moveToNext();
+		}
 		
-		document = formatDocument(build.getFreqTextList(), "Word Frequency", document);
+		document.addPageBreak();
+		iter = build.getbStTag().getTraversalIterator(BinarySearchTree.IN_TRAV);
+		document.writeHeading1("Tag Frequency");
+		while(iter.canMoveToNext())
+		{
+			
+			document.writeText( String.format("(%10s) %s", iter.getCurrentData().getFrequency(), iter.getCurrentData().getWord()));
+			iter.moveToNext();
+		}
 		
-		document = formatDocument(build.getFreqTagList(), "Tag Frequency", document);
+		document.addPageBreak();
+		iter2 = build.getbStBadWord().getTraversalIterator(BinarySearchTree.IN_TRAV);
+		document.writeHeading1("Misspelling");
+		while(iter2.canMoveToNext())
+		{
+			document.writeText(iter2.getCurrentData());
+			iter2.moveToNext();
+		}
 		
-		document = formatDocument(build.getFreqErrorList(), "Misspelling", document, true);
 		
 		return document;
 		
 	}
 	
-	private MSWordDocument formatDocument(ArrayList<WordFreq> list, String heading, MSWordDocument document)
+	private Document getDOM(String path) throws IOException
 	{
-		MSWordDocument modify = document;
-		modify.writeHeading1(heading);
-		for (int i = 0; i<list.size();i++)
-		{
-			
-			modify.writeText(String.format("(%10s) %s", list.get(i).getFrequency(), list.get(i).getWord()));
-			
-		}
-		modify.addPageBreak();
+		Document doc = null;
 		
-		return modify;
-	}
-	MSWordDocument formatDocument(ArrayList<WordFreq> list, String heading, MSWordDocument document, boolean TurnOffFreq)
-	{
-		MSWordDocument modify = document;
-		modify.writeHeading1(heading);
-		for (int i = 0; i<list.size();i++)
-		{
-			
-			modify.writeText(String.format(list.get(i).getWord()));
-			
-		}
-		modify.addPageBreak();
+				// check and see if the given path is for a local file or
+				// a page on the Internet
+				if (isValidURL(path)) {
+					path = ensurePathHasProtocol(path);
+					doc = buildFromInternetPage(path);
+				} else
+					// file on the local machine
+					doc = buildFromLocalFile(path);
+		return doc;
 		
-		return modify;
 	}
+
 	/**
 	 * Loads and builds a web page from the local file system
 	 * 
@@ -181,20 +182,6 @@ public class WebContentAnalyzer {
 		return url;
 	}
 	
-	private Document getDOM(String path) throws IOException
-	{
-		Document doc = null;
-		
-				// check and see if the given path is for a local file or
-				// a page on the Internet
-				if (isValidURL(path)) {
-					path = ensurePathHasProtocol(path);
-					doc = buildFromInternetPage(path);
-				} else
-					// file on the local machine
-					doc = buildFromLocalFile(path);
-		return doc;
-		
-	}
+	
 	
 }
